@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+    
+  repository_dispatch:
+
+  workflow_dispatch:
 
 jobs:
   build-and-push:
@@ -28,4 +32,4 @@ jobs:
         context: .
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: careywong/subweb:latest
+        tags: dawn33/subweb:latest

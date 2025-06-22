@@ -488,6 +488,10 @@ export default {
             this.customSubUrl += "&clash.doh=true";
           }
 
+          if (this.form.expand === false) {
+            this.customSubUrl += "&classic=true";
+          }
+
           this.customSubUrl += "&new_name=" + this.form.new_name.toString();
         }
 
