@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [ master, dev ]
 
+  repository_dispatch:
+
+  workflow_dispatch:
+
+env:
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+  
 jobs:
 
   build:
@@ -39,4 +47,10 @@ jobs:
       with:
         name: dist-${{ matrix.node-version }}
         path: dist/
-        retention-days: 7
+        retention-days: 30
+
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        retain_days: 0
+        keep_minimum_runs: 3

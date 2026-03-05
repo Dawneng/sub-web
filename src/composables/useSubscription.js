@@ -49,6 +49,11 @@ export function useSubscription() {
       if (form.tpl.clash.doh === true) {
         params += "&clash.doh=true";
       }
+
+      if (!form.expand) {
+        params += "&classic=true";
+      }
+
       params += "&new_name=" + form.new_name.toString();
     }
 

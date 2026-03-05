@@ -27,10 +27,9 @@
 
               <div v-if="advanced === '2'">
                 <el-form-item label="后端地址:">
-                  <el-autocomplete style="width: 100%" v-model="form.customBackend" :fetch-suggestions="backendSearch"
-                    placeholder="动动小手，（建议）自行搭建后端服务。例：http://127.0.0.1:25500/sub?">
-                    <el-button slot="append" @click="gotoGayhub" icon="el-icon-link">前往项目仓库</el-button>
-                  </el-autocomplete>
+                  <el-select v-model="form.customBackend" allow-create filterable :filter-method="backendSearch" placeholder="请选择" style="width: 100%">
+                    <el-option v-for="backend in options.backendOptions" :key="backend.value" :label="backend.label" :value="backend.value"></el-option>
+                  </el-select>
                 </el-form-item>
                 <el-form-item label="远程配置:">
                   <el-select v-model="form.remoteConfig" allow-create filterable placeholder="请选择" style="width: 100%">
@@ -209,6 +208,7 @@
 import { CONSTANTS } from '@/config/constants';
 import { CLIENT_TYPES } from '@/config/client-types';
 import { REMOTE_CONFIGS } from '@/config/remote-configs';
+import { BACKENDS_CONFIGS } from '@/config/backends-configs';
 
 // 导入Composables
 import { useSubscriptionForm, addCustomParam, saveSubUrl as saveSubscriptionUrl } from '@/composables/useSubscriptionForm';
@@ -240,7 +240,7 @@ export default {
       // 配置选项
       options: {
         clientTypes: CLIENT_TYPES,
-        backendOptions: [{ value: "http://127.0.0.1:25500/sub?" }],
+        backendOptions: BACKENDS_CONFIGS,
         remoteConfig: REMOTE_CONFIGS
       },
 
@@ -288,7 +288,7 @@ export default {
     }
   },
   created() {
-    document.title = "Subscription Converter";
+    document.title = "在线订阅转换";
     this.isPC = this.$getOS().isPc;
 
     // 获取 url cache
@@ -451,8 +451,10 @@ export default {
 
     backendSearchSuggestions(queryString, backends) {
       if (queryString) {
+        const lowerQuery = queryString.toLowerCase();
         return backends.filter(backend => {
-          return backend.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0;
+          return backend.label.toLowerCase().includes(lowerQuery) || 
+                 backend.value.toLowerCase().includes(lowerQuery);
         });
       }
       return backends;
